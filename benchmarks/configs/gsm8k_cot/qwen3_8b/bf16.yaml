@@ -1,0 +1,22 @@
+run:
+  output_dir: runs/gsm8k_cot/qwen3_8b/bf16
+
+model:
+  model: ./models/Qwen3-8B
+  dtype: bfloat16
+  device: cuda:0
+
+method:
+  name: bf16
+
+data:
+  dataset: openai/gsm8k
+  dataset_name: main
+  split: test
+  n_shot: 8
+  max_samples: null
+  max_prompt_tokens: 4096
+  max_new_tokens: 256
+
+eval:
+  seed: 1234

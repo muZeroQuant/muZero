@@ -1,0 +1,26 @@
+run:
+  output_dir: runs/gsm8k/qwen3_8b/logq2_zeroanchor_stat_cuda
+
+model:
+  model: /root/autodl-tmp/ann/Qwen3-8B
+  dtype: bfloat16
+  device: cuda:0
+
+method:
+  name: logq2_zeroanchor_stat_cuda
+  q_group_size: 64
+  residual_length: 128
+  amax_dtype: float16
+  stats_max_points: 65536
+
+data:
+  dataset: openai/gsm8k
+  dataset_name: main
+  split: test
+  n_shot: 8
+  max_samples: null
+  max_prompt_tokens: 4096
+  max_new_tokens: 256
+
+eval:
+  seed: 1234

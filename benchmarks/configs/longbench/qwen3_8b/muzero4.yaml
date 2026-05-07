@@ -1,0 +1,30 @@
+run:
+  output_dir: runs/longbench/qwen3_8b/mu_zero_4bit
+
+model:
+  model: ./models/Qwen3-8B
+  dtype: bfloat16
+  device: cuda:0
+
+method:
+  name: mu_zero_4bit
+  q_group_size: 64
+  residual_length: 128
+  backend: auto
+  amax_dtype: float16
+  decode_flush_by_group: true
+
+longbench:
+  longbench_root: ./data/LongBench
+  dataset_repo: THUDM/LongBench
+  data_archive: null
+  use_e: false
+  model_name: null
+  chat_template: official
+
+data:
+  max_prompt_tokens: 0
+  max_new_tokens: 0
+
+eval:
+  seed: 1234

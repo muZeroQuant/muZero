@@ -1,0 +1,27 @@
+run:
+  output_dir: runs/gsm8k_cot/qwen3_8b/mu_zero_2bit
+
+model:
+  model: ./models/Qwen3-8B
+  dtype: bfloat16
+  device: cuda:0
+
+method:
+  name: mu_zero_2bit
+  q_group_size: 64
+  residual_length: 128
+  backend: auto
+  amax_dtype: float16
+  decode_flush_by_group: true
+
+data:
+  dataset: openai/gsm8k
+  dataset_name: main
+  split: test
+  n_shot: 8
+  max_samples: null
+  max_prompt_tokens: 4096
+  max_new_tokens: 256
+
+eval:
+  seed: 1234

@@ -1,0 +1,25 @@
+run:
+  output_dir: runs/longbench/qwen3_8b/bf16
+
+model:
+  model: ./models/Qwen3-8B
+  dtype: bfloat16
+  device: cuda:0
+
+method:
+  name: bf16
+
+longbench:
+  longbench_root: ./data/LongBench
+  dataset_repo: THUDM/LongBench
+  data_archive: null
+  use_e: false
+  model_name: null
+  chat_template: official
+
+data:
+  max_prompt_tokens: 0
+  max_new_tokens: 0
+
+eval:
+  seed: 1234
