@@ -6,6 +6,8 @@ setup(
     description="μ-Zero: piecewise log-companding KV-cache quantisation with zero-anchor",
     author="μ-Zero Authors",
     packages=find_packages(),
+    package_data={"muzero": ["vendor/csrc/*.cpp", "vendor/csrc/*.cu"]},
+    include_package_data=True,
     python_requires=">=3.10",
     install_requires=[
         "torch>=2.1",

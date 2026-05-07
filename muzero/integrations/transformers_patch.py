@@ -33,6 +33,7 @@ from __future__ import annotations
 import importlib
 import inspect
 import os
+import sys
 from typing import Any, Optional
 
 import torch
@@ -220,6 +221,9 @@ def patch_transformers() -> None:
     # Also extend the generation-config allow-list so generate() accepts mu_zero_*bit.
     _patch_generation_config_validation()
 
+    # Make legacy zero-anchor modules available without a patched Transformers checkout.
+    _install_legacy_zeroanchor_aliases()
+
     # Build MuZeroCache from generate(cache_implementation="mu_zero_*bit").
     _patch_generation_cache_preparation()
 
@@ -228,6 +232,19 @@ def patch_transformers() -> None:
 
     _PATCHED = True
     print(f"[μ-Zero] Registered mu_zero_{{1,2,3,4,7,8}}bit in transformers CACHE_CLASS_REGISTRY.")
+
+
+def _install_legacy_zeroanchor_aliases() -> None:
+    """Expose vendored legacy LogQ modules under the names used by old patches."""
+    try:
+        from ..vendor import logq_zeroanchor_cuda, logq_zeroanchor_triton
+
+        sys.modules.setdefault("transformers.integrations.logq_zeroanchor_cuda", logq_zeroanchor_cuda)
+        sys.modules.setdefault("transformers.integrations.logq_zeroanchor_triton", logq_zeroanchor_triton)
+    except Exception as exc:
+        import warnings
+
+        warnings.warn(f"[μ-Zero] Could not install legacy zero-anchor module aliases: {exc}")
 
 
 def _patch_generation_config_validation() -> None:
