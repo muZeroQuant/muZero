@@ -1,5 +1,5 @@
 model:
-  name_or_path: /root/autodl-tmp/ann/Qwen3-8B
+  name_or_path: ./models/Qwen3-8B
   dtype: bfloat16
   device: cuda:0
 
