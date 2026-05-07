@@ -1,0 +1,14 @@
+model:
+  name_or_path: /root/autodl-tmp/ann/Qwen3-8B
+  dtype: bfloat16
+  device: cuda:0
+
+mu_zero:
+  q_group_size: 64
+  residual_length: 128
+  amax_dtype: float16
+  also_2bit: false
+
+# Prefill lengths to sweep (new_tokens are generated on top of these)
+context_lengths: [512, 1024, 2048, 4096, 8192]
+new_tokens: 128

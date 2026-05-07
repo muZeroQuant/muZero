@@ -45,7 +45,7 @@ def parse_int_list(value: str) -> list[int]:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config", default="benchmarks/configs/qwen3_8b.yaml")
+    parser.add_argument("--config", default="benchmarks/configs/throughput/qwen3_8b.yaml")
     parser.add_argument("--output", default="runs/muzero_scaling/results.csv")
     parser.add_argument("--methods", default=",".join(DEFAULT_METHODS))
     parser.add_argument("--warmup", type=int, default=0)

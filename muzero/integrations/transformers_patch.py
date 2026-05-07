@@ -116,6 +116,18 @@ class MuZeroCache(_HFCache):
     def get_usable_length(self, new_seq_length: int, layer_idx: int = 0) -> int:
         return self.get_seq_length(layer_idx)
 
+    def get_mask_sizes(self, query_length: int | torch.Tensor, layer_idx: int = 0) -> tuple[int, int]:
+        if isinstance(query_length, torch.Tensor):
+            query_length = int(query_length.numel())
+        if layer_idx >= len(self.layers):
+            return query_length, 0
+        return self.layers[layer_idx].get_mask_sizes(query_length)
+
+    def get_max_cache_shape(self, layer_idx: int = 0) -> int:
+        if layer_idx >= len(self.layers):
+            return -1
+        return self.layers[layer_idx].get_max_cache_shape()
+
     def get_attention_state(self, layer_idx: int) -> dict[str, Any] | None:
         return self.layers[layer_idx].get_attention_state() if layer_idx < len(self.layers) else None
 

@@ -86,7 +86,9 @@ def _parse_args():
 
 def _load_model(model_cfg: dict) -> tuple[Any, Any]:
     from transformers import AutoModelForCausalLM, AutoTokenizer
-    name_or_path = model_cfg["name_or_path"]
+    name_or_path = model_cfg.get("name_or_path") or model_cfg.get("model")
+    if not name_or_path:
+        raise KeyError("model config must define `name_or_path` or `model`")
     dtype        = getattr(torch, model_cfg.get("dtype", "bfloat16"))
     device       = model_cfg.get("device", "cuda:0")
     name_or_path = ensure_model_path(name_or_path)
@@ -490,7 +492,10 @@ def main():
     model, tok = _load_model(cfg["model"])
     device     = cfg["model"].get("device", "cuda:0")
 
-    mu_cfg  = cfg.get("mu_zero", {})
+    mu_cfg  = dict(cfg.get("mu_zero", {}) or {})
+    method_section = cfg.get("method", {}) or {}
+    if isinstance(method_section, dict):
+        mu_cfg.update({k: v for k, v in method_section.items() if k != "name"})
     if args.residual_length is not None:
         mu_cfg = {**mu_cfg, "residual_length": args.residual_length}
     ctx_lens = cfg.get("context_lengths", [512, 1024, 2048, 4096, 8192])
@@ -498,7 +503,10 @@ def main():
         ctx_lens = [int(x.strip()) for x in args.contexts.split(",") if x.strip()]
     new_tok  = args.new_tokens if args.new_tokens is not None else cfg.get("new_tokens", 128)
 
-    requested_methods = [m.strip() for m in args.methods.split(",") if m.strip()]
+    methods_arg_provided = any(token == "--methods" or token.startswith("--methods=") for token in sys.argv[1:])
+    configured_method = method_section.get("name") if isinstance(method_section, dict) else None
+    methods_value = configured_method if configured_method and not methods_arg_provided else args.methods
+    requested_methods = [m.strip() for m in str(methods_value).split(",") if m.strip()]
     allowed_methods = {
         "bf16",
         "bf16_static",

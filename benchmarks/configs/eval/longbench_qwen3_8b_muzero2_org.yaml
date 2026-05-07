@@ -29,7 +29,7 @@ longbench:
   chat_template: official
 
 data:
-  # max_samples: 3
+  max_samples: 3
   max_prompt_tokens: 0
   max_new_tokens: 0
 

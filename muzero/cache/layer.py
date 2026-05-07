@@ -479,8 +479,9 @@ class MuZeroCacheLayer:
     def get_seq_length(self) -> int:
         return self.cumulative_length
 
-    def get_mask_sizes(self, cache_position: torch.Tensor) -> tuple[int, int]:
-        query_length = cache_position.shape[0]
+    def get_mask_sizes(self, query_length: int | torch.Tensor) -> tuple[int, int]:
+        if isinstance(query_length, torch.Tensor):
+            query_length = int(query_length.numel())
         return self.get_seq_length() + query_length, 0
 
     def get_max_cache_shape(self) -> int:
