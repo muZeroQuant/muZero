@@ -235,9 +235,10 @@ def patch_transformers() -> None:
 
 
 def _install_legacy_zeroanchor_aliases() -> None:
-    """Expose vendored legacy LogQ modules under the names used by old patches."""
+    """Expose repo-local legacy LogQ modules under the names used by old patches."""
     try:
-        from ..vendor import logq_zeroanchor_cuda, logq_zeroanchor_triton
+        from ..kernels.legacy_logq import cuda as logq_zeroanchor_cuda
+        from ..kernels.legacy_logq import triton as logq_zeroanchor_triton
 
         sys.modules.setdefault("transformers.integrations.logq_zeroanchor_cuda", logq_zeroanchor_cuda)
         sys.modules.setdefault("transformers.integrations.logq_zeroanchor_triton", logq_zeroanchor_triton)
